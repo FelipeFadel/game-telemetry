@@ -1,0 +1,18 @@
+name = "api"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
+preview_urls = false
+
+[[d1_databases]]
+binding = "DB"
+database_name = "linusbae"
+# Troque pelo id que aparece ao rodar: npx wrangler d1 create linusbae
+database_id = "c1c69492-9543-4d97-8ffe-82260ee4d18a"
+
+# Scripts que rodam no navegador (src/cliente/*.cliente.js) entram no Worker
+# como texto e são colocados dentro das páginas.
+[[rules]]
+type = "Text"
+globs = ["**/*.cliente.js"]
+fallthrough = false
