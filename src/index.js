@@ -2,8 +2,12 @@
 //
 // Rotas públicas:
 //   POST /registrar        -> o jogo envia resumos, cliques e teclas
-// Rotas com senha (login em /login com cookie de sessão; Basic Auth também
-// vale; segredo SENHA_PAINEL):
+// Contas:
+//   GET/POST /cadastro     -> criar conta
+//   GET/POST /login        -> entrar (e-mail ou usuário + senha)
+//   GET      /conta        -> página da conta; POST /sair encerra a sessão
+// Rotas do painel (conta listada em ADMINS no login; Basic Auth com o
+// segredo SENHA_PAINEL também vale, para scripts):
 //   GET  /painel           -> tabela aluno x fase
 //   GET  /heatmap          -> heatmap de cliques por tela
 //   GET  /teclas           -> uso do teclado por modo do jogo
@@ -13,7 +17,8 @@
 
 import { apiAlterar, apiDesfazer, apiHistorico, apiOpcoes, apiRegistro, apiRegistros, paginaDados } from "./admin.js";
 import { apiHeatmap, paginaHeatmap } from "./heatmap.js";
-import { login, paraLogin, sair, sessaoValida } from "./login.js";
+import { contaDaSessao, ehAdmin } from "./contas.js";
+import { cadastro, login, paginaConta, paraLogin, sair } from "./login.js";
 import { csv, painel } from "./painel.js";
 import { registrar } from "./registrar.js";
 import { paginaTeclas } from "./teclas.js";
@@ -51,19 +56,25 @@ export default {
       if (url.pathname === "/login" && (request.method === "GET" || request.method === "POST")) {
         return await login(request, env, url);
       }
+      if (url.pathname === "/cadastro" && (request.method === "GET" || request.method === "POST")) {
+        return await cadastro(request, env, url);
+      }
+      if (url.pathname === "/conta" && request.method === "GET") return await paginaConta(request, env, url);
       if (url.pathname === "/sair" && request.method === "POST") {
         if (request.headers.get("Origin") !== url.origin) return erro(403, "Origem não permitida");
         return sair(url);
       }
 
-      if (url.pathname === "/") return Response.redirect(url.origin + "/painel", 302);
+      if (url.pathname === "/") return Response.redirect(url.origin + "/conta", 302);
 
       const get = request.method === "GET" && ROTAS_GET[url.pathname];
       const post = request.method === "POST" && ROTAS_POST[url.pathname];
       if (!get && !post) return new Response("Não encontrado", { status: 404 });
 
-      // Sessão do login; Basic Auth continua valendo para scripts (curl).
-      if (!(await sessaoValida(request, env)) && !(await autorizado(request, env))) {
+      // Painel: conta listada em ADMINS (sessão do login); Basic Auth continua valendo para scripts (curl).
+      const conta = await contaDaSessao(request, env);
+      if (!ehAdmin(conta, env) && !(await autorizado(request, env))) {
+        if (conta) return url.pathname.startsWith("/api/") ? erro(403, "Sem permissão") : new Response("Sem permissão para o painel.", { status: 403 });
         if (url.pathname.startsWith("/api/")) return erro(401, "Sessão expirada. Entre de novo.");
         return paraLogin(url);
       }

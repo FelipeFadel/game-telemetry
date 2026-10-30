@@ -4,6 +4,10 @@ compatibility_date = "2025-09-01"
 workers_dev = true
 preview_urls = false
 
+# Arquivos estáticos (fontes em public/fontes), servidos sem passar pelo Worker.
+[assets]
+directory = "./public"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "linusbae"

@@ -6,8 +6,8 @@
     "deploy": "wrangler deploy",
     "db:local": "wrangler d1 execute linusbae --local --file=schema.sql",
     "db:remoto": "wrangler d1 execute linusbae --remote --file=schema.sql",
-    "db:migrar:local": "wrangler d1 execute linusbae --local --file=migracoes/0002_cliente_em_teste_alteracoes.sql",
-    "db:migrar:remoto": "wrangler d1 execute linusbae --remote --file=migracoes/0002_cliente_em_teste_alteracoes.sql"
+    "db:migrar:local": "wrangler d1 execute linusbae --local --file=migracoes/0003_usuarios.sql",
+    "db:migrar:remoto": "wrangler d1 execute linusbae --remote --file=migracoes/0003_usuarios.sql"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

@@ -123,6 +123,15 @@ export const NAV = [
   ["/dados", "Gerenciar dados"],
 ];
 
+// Fontes servidas de public/fontes (Work Sans nos títulos, Open Sans no texto).
+export const FONTES_CSS = `
+  @font-face { font-family: "Work Sans"; font-style: normal; font-weight: 100 900; font-display: swap;
+    src: url("/fontes/work-sans-latin-wght-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Open Sans"; font-style: normal; font-weight: 300 800; font-display: swap;
+    src: url("/fontes/open-sans-latin-wght-normal.woff2") format("woff2"); }
+  :root { --fonte-titulo: "Work Sans", system-ui, sans-serif; --fonte-texto: "Open Sans", system-ui, sans-serif; }
+  h1, h2, h3, header strong { font-family: var(--fonte-titulo); font-weight: 800; }`;
+
 // Página completa com o menu do painel. `corpo` já vem escapado.
 export function layout(titulo, ativo, corpo, { script = "", estilo = "" } = {}) {
   const nav = NAV.map(([href, nome]) =>
@@ -133,44 +142,26 @@ export function layout(titulo, ativo, corpo, { script = "", estilo = "" } = {}) 
 <html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(titulo)} · Linusbae</title>
-<style>
+<style>${FONTES_CSS}
   :root {
     color-scheme: light;
-    --fundo: #f6f6f4; --superficie: #fcfcfb; --borda: #dcdbd6; --borda-forte: #b9b8b1;
-    --texto: #0b0b0b; --texto-2: #52514e; --texto-3: #7a7974;
-    --acento: #2a78d6; --acento-texto: #ffffff;
-    --bom: #0ca30c; --bom-texto: #0a7a0a; --critico: #d03b3b; --aviso-fundo: #fff4d6;
-    --seq-100: #cde2fb; --seq-200: #9ec5f4; --seq-300: #6da7ec; --seq-400: #3987e5;
-    --seq-500: #256abf; --seq-600: #184f95; --seq-700: #0d366b;
-    --feita: #e7f4e7;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      color-scheme: dark;
-      --fundo: #121211; --superficie: #1a1a19; --borda: #33332f; --borda-forte: #4a4a45;
-      --texto: #f0efec; --texto-2: #c3c2b7; --texto-3: #8f8e86;
-      --acento: #3987e5; --acento-texto: #ffffff;
-      --bom-texto: #4cc84c; --aviso-fundo: #3a3112;
-      --feita: #1d321d;
-    }
-  }
-  :root[data-theme="dark"] {
-    color-scheme: dark;
-    --fundo: #121211; --superficie: #1a1a19; --borda: #33332f; --borda-forte: #4a4a45;
-    --texto: #f0efec; --texto-2: #c3c2b7; --texto-3: #8f8e86;
-    --acento: #3987e5; --acento-texto: #ffffff;
-    --bom-texto: #4cc84c; --aviso-fundo: #3a3112;
-    --feita: #1d321d;
+    --fundo: #ffffff; --superficie: #ffffff; --topo: #f2f5fc; --borda: #d6ddec; --borda-forte: #7f8db0;
+    --texto: #0a1a3f; --texto-2: #475577; --texto-3: #66738f;
+    --acento: #0033a0; --acento-texto: #ffffff; --destaque: #ff6a00;
+    --bom: #1c7a2e; --bom-texto: #1c7a2e; --critico: #c4261a; --aviso-fundo: #ffe6d2;
+    --seq-100: #d9e2f4; --seq-200: #adc4e9; --seq-300: #8099d0; --seq-400: #4a6db8;
+    --seq-500: #2954af; --seq-600: #0033a0; --seq-700: #001f60;
+    --feita: #ffe6d2;
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
-  body { font-family: system-ui, sans-serif; margin: 0; background: var(--fundo); color: var(--texto); line-height: 1.4; }
-  header { background: var(--superficie); border-bottom: 1px solid var(--borda); padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; }
-  header strong { font-size: 1rem; margin-right: 8px; }
+  body { font-family: var(--fonte-texto); margin: 0; background: var(--fundo); color: var(--texto); line-height: 1.4; }
+  header { background: var(--topo); border-bottom: 3px solid var(--destaque); padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; }
+  header strong { font-size: 1rem; margin-right: 8px; font-weight: 900; text-transform: uppercase; }
   header nav { display: flex; flex-wrap: wrap; gap: 4px; }
-  header nav a { padding: 5px 10px; border-radius: 6px; text-decoration: none; color: var(--texto-2); }
-  header nav a:hover { background: var(--fundo); color: var(--texto); }
-  header nav a.ativo { background: var(--texto); color: var(--superficie); }
+  header nav a { padding: 5px 12px; border-radius: 999px; text-decoration: none; color: var(--texto-2); font-weight: 600; }
+  header nav a:hover { background: var(--borda); color: var(--texto); }
+  header nav a.ativo { background: var(--acento); color: var(--acento-texto); font-weight: 700; }
   main { padding: 16px; max-width: 1400px; }
   h1 { font-size: 1.25rem; margin: 0 0 12px; }
   h2 { font-size: 1.05rem; margin: 24px 0 8px; }
@@ -182,21 +173,24 @@ export function layout(titulo, ativo, corpo, { script = "", estilo = "" } = {}) 
   input, select, textarea { background: var(--superficie); border: 1px solid var(--borda-forte); border-radius: 6px; padding: 5px 8px; min-width: 0; }
   button, .botao { background: var(--superficie); border: 1px solid var(--borda-forte); border-radius: 6px; padding: 5px 12px; cursor: pointer; text-decoration: none; display: inline-block; color: var(--texto); }
   button:hover, .botao:hover { border-color: var(--texto-2); }
+  .botao { border: 1.5px solid var(--acento); color: var(--acento); font-weight: 700; border-radius: 999px; }
+  .botao:hover { border-color: var(--acento); background: var(--topo); }
+  :focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
   button.primario { background: var(--acento); border-color: var(--acento); color: var(--acento-texto); }
   button.perigo { color: var(--critico); border-color: var(--critico); }
   button:disabled { opacity: 0.5; cursor: default; }
   .pilulas { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
   .pilulas a { padding: 4px 10px; border: 1px solid var(--borda-forte); border-radius: 999px; text-decoration: none; color: var(--texto); font-size: 0.85rem; }
-  .pilulas a.ativo { background: var(--texto); color: var(--superficie); border-color: var(--texto); }
+  .pilulas a.ativo { background: var(--acento); color: var(--acento-texto); border-color: var(--acento); }
   .rolagem { overflow-x: auto; background: var(--superficie); border: 1px solid var(--borda); border-radius: 8px; }
   table { border-collapse: collapse; font-size: 0.85rem; width: 100%; }
   th, td { border-bottom: 1px solid var(--borda); padding: 5px 8px; text-align: left; white-space: nowrap; vertical-align: top; }
-  th { background: var(--fundo); position: sticky; top: 0; font-weight: 600; color: var(--texto-2); font-size: 0.78rem; }
+  th { background: var(--topo); position: sticky; top: 0; font-weight: 600; color: var(--texto-2); font-size: 0.78rem; }
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   .vazio { color: var(--texto-3); }
   .cartoes { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; }
-  .cartao { background: var(--superficie); border: 1px solid var(--borda); border-radius: 8px; padding: 10px 14px; min-width: 140px; }
-  .cartao b { display: block; font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+  .cartao { background: var(--topo); border: 1px solid var(--borda); border-radius: 10px; padding: 10px 14px; min-width: 140px; }
+  .cartao b { display: block; font-family: var(--fonte-titulo); font-weight: 900; font-size: 1.4rem; font-variant-numeric: tabular-nums; color: var(--acento); }
   .cartao span { color: var(--texto-2); font-size: 0.8rem; }
   .aviso { background: var(--aviso-fundo); border-radius: 8px; padding: 8px 12px; margin: 8px 0; font-size: 0.88rem; }
   ${estilo}
